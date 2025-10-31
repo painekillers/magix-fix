@@ -7490,6 +7490,7 @@ G.Launch=function()
 			G.modsByScript['dataScript-'+mod.id]=mod;
 			var isMagixMod = ['https://raw.githubusercontent.com/painekillers/magix-fix/master/magixUtils.js', 'https://raw.githubusercontent.com/painekillers/magix-fix/master/magix.js'].includes(mod.url);
 			if ((offlineMode && isMagixMod) || directAccessMode || mod.url.slice(0, 4) !== 'http') {
+				console.warn(offlineMode, isMagixMod, directAccessMode, mod.url);
 				if (!magixNote) {
 					if (isMagixMod) {
 						console.warn("Magix was loaded using magix.js and magixUtils.js because you enabled offline mode, which allows you to modify the program easily.");
@@ -8363,4 +8364,5 @@ window.onload=function()
 		}
 	}
 };
+
 
