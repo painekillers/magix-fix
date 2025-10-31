@@ -7517,12 +7517,14 @@ G.Launch=function()
 								console.warn("Magix was loaded locally because you don't have internet. It may not be the newest version.");
 								magixNote=true;
 							}
+							console.warn("Using Local Utils");
 							script.setAttribute('src','magixUtils.js');
 							setTimeout(function() {document.head.appendChild(script)}, 100*i);
 							script.onload=function() {
 								mod.loaded=true;
 							}
 						} else if (mod.url === "https://raw.githubusercontent.com/painekillers/magix-fix/master/magix.js") {
+							console.warn("Using Local Magix");
 							script.setAttribute('src','magix.js');
 							setTimeout(function() {document.head.appendChild(script)}, 100*i);
 							script.onload=function() {
@@ -8361,3 +8363,4 @@ window.onload=function()
 		}
 	}
 };
+
