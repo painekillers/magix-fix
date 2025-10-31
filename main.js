@@ -8361,5 +8361,3 @@ window.onload=function()
 		}
 	}
 };
-
-
