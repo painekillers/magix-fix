@@ -575,7 +575,7 @@ G.Launch=function()
 	{
 		// Magix will override the G.Load function, so we add an extra step here
 		try {
-			G.importStr=b64EncodeUnicode(escape(unescape(b64DecodeUnicode(str)).replace("https://file.garden/Xbm-ilapeDSxWf1b/MagixOfficialR55B.js","https://raw.githubusercontent.com/plasma4/magix-fix/master/magix.js").replace("https://file.garden/Xbm-ilapeDSxWf1b/MagixUtilsR55B.js","https://raw.githubusercontent.com/plasma4/magix-fix/master/magixUtils.js").replace("https://file.garden/ZmatEHzFI2_QBuAF/magix.js","https://raw.githubusercontent.com/plasma4/magix-fix/master/magix.js").replace("https://file.garden/ZmatEHzFI2_QBuAF/magixUtils.js","https://raw.githubusercontent.com/plasma4/magix-fix/master/magixUtils.js")));
+			G.importStr=b64EncodeUnicode(escape(unescape(b64DecodeUnicode(str)).replace("https://file.garden/Xbm-ilapeDSxWf1b/MagixOfficialR55B.js","https://raw.githubusercontent.com/painekillers/magix-fix/master/magix.js").replace("https://file.garden/Xbm-ilapeDSxWf1b/MagixUtilsR55B.js","https://raw.githubusercontent.com/painekillers/magix-fix/master/magixUtils.js").replace("https://file.garden/ZmatEHzFI2_QBuAF/magix.js","https://raw.githubusercontent.com/painekillers/magix-fix/master/magix.js").replace("https://file.garden/ZmatEHzFI2_QBuAF/magixUtils.js","https://raw.githubusercontent.com/painekillers/magix-fix/master/magixUtils.js")));
 		} catch (e) {
 			alert("The save that you have provided was invalid.");
 			console.warn(e);
@@ -737,7 +737,7 @@ G.Launch=function()
 		
 		if (toStr)
 		{
-			str=str.replace("https://raw.githubusercontent.com/plasma4/magix-fix/master/magix.js","https://file.garden/ZmatEHzFI2_QBuAF/magix.js").replace("https://raw.githubusercontent.com/plasma4/magix-fix/master/magixUtils.js","https://file.garden/ZmatEHzFI2_QBuAF/magixUtils.js")
+			str=str.replace("https://raw.githubusercontent.com/painekillers/magix-fix/master/magix.js","https://file.garden/ZmatEHzFI2_QBuAF/magix.js").replace("https://raw.githubusercontent.com/painekillers/magix-fix/master/magixUtils.js","https://file.garden/ZmatEHzFI2_QBuAF/magixUtils.js")
 		}
 		//console.log('SAVE');
 		//console.log(str);
@@ -794,7 +794,7 @@ G.Launch=function()
 			//take care of strings first
 			G.stringsLoadedN=0;
 			G.stringsLoaded=[];
-			str=str.replace("https://file.garden/Xbm-ilapeDSxWf1b/MagixOfficialR55B.js","https://raw.githubusercontent.com/plasma4/magix-fix/master/magix.js").replace("https://file.garden/Xbm-ilapeDSxWf1b/MagixUtilsR55B.js","https://raw.githubusercontent.com/plasma4/magix-fix/master/magixUtils.js").replace("https://file.garden/ZmatEHzFI2_QBuAF/magix.js","https://raw.githubusercontent.com/plasma4/magix-fix/master/magix.js").replace("https://file.garden/ZmatEHzFI2_QBuAF/magixUtils.js","https://raw.githubusercontent.com/plasma4/magix-fix/master/magixUtils.js").replace(/"(.*?)"/gi,G.parseLoadStrings);
+			str=str.replace("https://file.garden/Xbm-ilapeDSxWf1b/MagixOfficialR55B.js","https://raw.githubusercontent.com/painekillers/magix-fix/master/magix.js").replace("https://file.garden/Xbm-ilapeDSxWf1b/MagixUtilsR55B.js","https://raw.githubusercontent.com/painekillers/magix-fix/master/magixUtils.js").replace("https://file.garden/ZmatEHzFI2_QBuAF/magix.js","https://raw.githubusercontent.com/painekillers/magix-fix/master/magix.js").replace("https://file.garden/ZmatEHzFI2_QBuAF/magixUtils.js","https://raw.githubusercontent.com/painekillers/magix-fix/master/magixUtils.js").replace(/"(.*?)"/gi,G.parseLoadStrings);
 			
 			str=str.split('|');
 			
@@ -1320,7 +1320,7 @@ G.Launch=function()
 		
 		
 		G.dialogue.popup(function(div){
-			var magixOn=G.mods[0].url=='https://raw.githubusercontent.com/plasma4/magix-fix/master/magixUtils.js'&&G.mods[1].url=='https://raw.githubusercontent.com/plasma4/magix-fix/master/magix.js'
+			var magixOn=G.mods[0].url=='https://raw.githubusercontent.com/painekillers/magix-fix/master/magixUtils.js'&&G.mods[1].url=='https://raw.githubusercontent.com/painekillers/magix-fix/master/magix.js'
 			return (magixOn?'<div style="padding:16px;min-width:320px;"><div class="fancyText title">Magix is enabled!</div>':'<div style="padding:16px;min-width:320px;"><div class="fancyText title">Start a new game</div>')+
 			G.button({style:'position:absolute;right:-6px;top:-6px;',tooltip:'Select mods for this playthrough.',text:'Use mods',onclick:function(e){G.SelectMods();}})+
 			(magixOn?"":G.button({style:'position:absolute;top:-6px;',tooltip:'Use the Magix Mod, which works offline.',text:'Use Magix',onclick:function(e){G.SelectMagix();}}))+
@@ -7488,7 +7488,7 @@ G.Launch=function()
 			let script=document.createElement('script');
 			script.id='dataScript-'+mod.id;
 			G.modsByScript['dataScript-'+mod.id]=mod;
-			var isMagixMod = ['https://raw.githubusercontent.com/plasma4/magix-fix/master/magixUtils.js', 'https://raw.githubusercontent.com/plasma4/magix-fix/master/magix.js'].includes(mod.url);
+			var isMagixMod = ['https://raw.githubusercontent.com/painekillers/magix-fix/master/magixUtils.js', 'https://raw.githubusercontent.com/painekillers/magix-fix/master/magix.js'].includes(mod.url);
 			if ((offlineMode && isMagixMod) || directAccessMode || mod.url.slice(0, 4) !== 'http') {
 				if (!magixNote) {
 					if (isMagixMod) {
@@ -7496,7 +7496,7 @@ G.Launch=function()
 					}
 					magixNote=true;
 				}
-				script.setAttribute('src',isMagixMod?mod.url.replace("https://raw.githubusercontent.com/plasma4/magix-fix/master/", ""):mod.url);
+				script.setAttribute('src',isMagixMod?mod.url.replace("https://raw.githubusercontent.com/painekillers/magix-fix/master/", ""):mod.url);
 				document.head.appendChild(script);	
 				script.onload=function() {
 					mod.loaded=true;
@@ -7512,7 +7512,7 @@ G.Launch=function()
 					triedOffline = true
 					var offlineScript=localStorage.getItem("nelOffline"+i);
 					if (offlineScript==null) {
-						if (mod.url === "https://raw.githubusercontent.com/plasma4/magix-fix/master/magixUtils.js") {
+						if (mod.url === "https://raw.githubusercontent.com/painekillers/magix-fix/master/magixUtils.js") {
 							if (!magixNote) {
 								console.warn("Magix was loaded locally because you don't have internet. It may not be the newest version.");
 								magixNote=true;
@@ -7522,7 +7522,7 @@ G.Launch=function()
 							script.onload=function() {
 								mod.loaded=true;
 							}
-						} else if (mod.url === "https://raw.githubusercontent.com/plasma4/magix-fix/master/magix.js") {
+						} else if (mod.url === "https://raw.githubusercontent.com/painekillers/magix-fix/master/magix.js") {
 							script.setAttribute('src','magix.js');
 							setTimeout(function() {document.head.appendChild(script)}, 100*i);
 							script.onload=function() {
@@ -8361,4 +8361,5 @@ window.onload=function()
 		}
 	}
 };
+
 
