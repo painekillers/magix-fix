@@ -7506,6 +7506,7 @@ G.Launch=function()
 				// A rather strange function with the purpose of trying to get files that don't work with XMLHttpRequests or when you don't have internet
 				let triedOffline = false
 				function tryOffline() {
+					console.warn("Trying Offline");
 					if (triedOffline) {
 						return
 					}
@@ -7557,6 +7558,8 @@ G.Launch=function()
 					}
 				}
 				setTimeout(tryOffline, 2000);
+
+				console.warn("Loading Online Files");
 				let x=new XMLHttpRequest();
 				x.onload=function() {
 					var v=x.responseText + ";\nG.mods[" + i + "].loaded=true";
@@ -7567,6 +7570,7 @@ G.Launch=function()
 				x.addEventListener("error", tryOffline);
 				x.open("GET", mod.url+"?r="+Math.random());
 				x.send();
+				
 			}
 		}
 		
@@ -8364,5 +8368,6 @@ window.onload=function()
 		}
 	}
 };
+
 
 
