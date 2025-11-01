@@ -7510,7 +7510,7 @@ G.Launch=function()
 					if (triedOffline) {
 						return
 					}
-					offlineMode = true
+					//offlineMode = true
 					triedOffline = true
 					var offlineScript=localStorage.getItem("nelOffline"+i);
 					if (offlineScript==null) {
@@ -8368,6 +8368,7 @@ window.onload=function()
 		}
 	}
 };
+
 
 
 
