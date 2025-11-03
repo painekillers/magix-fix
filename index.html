@@ -23,13 +23,32 @@ Feel free to alter this code to your liking, but please do not re-host it, do no
 	window.onerror = (msg, src, line, col, err) => {
 	  eDiv.innerHTML += `Error in ${src || 'inline script'}: ${msg} (line ${line})<br>`;
 	};
-	eDiv.innerHTML += "from painekillers-test-1 (Ver 2)<br>";
+	eDiv.innerHTML += "from painekillers-test-1 (Ver 3)<br>";
 
 	const originalWarn = console.warn;
 	console.warn = function(...args) {
 	 	eDiv.innerHTML += `Warning: ${args.join(' ')}<br>`;
 	  	originalWarn.apply(console, args); // still log to normal console
 	};
+
+	(() => {
+	  const consoleDiv = document.getElementById("errors");
+	  let offsetX, offsetY, isDown = false;
+	
+	  consoleDiv.addEventListener("mousedown", e => {
+	    isDown = true;
+	    offsetX = e.clientX - consoleDiv.offsetLeft;
+	    offsetY = e.clientY - consoleDiv.offsetTop;
+	  });
+	
+	  document.addEventListener("mouseup", () => isDown = false);
+	
+	  document.addEventListener("mousemove", e => {
+	    if (!isDown) return;
+	    consoleDiv.style.left = e.clientX - offsetX + "px";
+	    consoleDiv.style.top = e.clientY - offsetY + "px";
+	  });
+	})();
 </script>
 
 
@@ -98,6 +117,7 @@ Feel free to alter this code to your liking, but please do not re-host it, do no
 </body>
 
 </html>
+
 
 
 
