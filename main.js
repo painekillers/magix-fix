@@ -7505,9 +7505,10 @@ G.Launch=function()
 			} else {
 				// A rather strange function with the purpose of trying to get files that don't work with XMLHttpRequests or when you don't have internet
 				let triedOffline = false
+				let onlineLoaded = false
 				function tryOffline() {
 					console.warn("Trying Offline");
-					if (triedOffline) {
+					if (triedOffline || onlineLoaded) {
 						return
 					}
 					//offlineMode = true
@@ -7562,6 +7563,7 @@ G.Launch=function()
 				console.warn("Loading Online Files");
 				let x=new XMLHttpRequest();
 				x.onload=function() {
+					onlineLoaded = true;
 					var v=x.responseText + ";\nG.mods[" + i + "].loaded=true";
 					localStorage.setItem("nelOffline"+i,mod.url+"\n"+v);
 					script.innerHTML=v;
@@ -8368,6 +8370,7 @@ window.onload=function()
 		}
 	}
 };
+
 
 
 
