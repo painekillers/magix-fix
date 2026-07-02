@@ -2367,8 +2367,8 @@ if (getObj("civ") != "1") {
                         })
                     }
                     if (G.has('t8') && G.year > 2) { //it'd be nearly impossible if dark decay occurred IMMEDIATELY
-                        var lostHousing = Math.ceil(G.getRes('housing').amount * 0.03) + 1;
-                        var lostPeople = Math.ceil(G.getRes('population').amount * 0.02 + 0.2 * Math.min(Math.pow(G.year, 1.3), 20 + Math.pow(G.year, 1.1) * 0.15) * (0.2 + Math.random())) + 1; //the wonder takes a while to build, so we can't have the exponents too large
+                        var lostHousing = Math.min(Math.ceil(G.getRes('housing').amount * 0.03) + 1, G.getRes('housing').amount); //Make sure it doesnt go to negative housing
+                        var lostPeople = Math.min(Math.floor(G.getRes('population').amount * 0.03 + 0.2 * Math.min(Math.pow(G.year, 1.3), 20 + Math.pow(G.year, 1.1) * 0.15) * (0.2 + Math.random())), Math.max(G.getRes(population') - 5, 0)); //the wonder takes a while to build, so we can't have the exponents too large (Note from panda: tweaked this to grow slightly faster but start lower so that it doesn't straight up kill your entire population at the start. Also made it leave atleast 5 people)
                         var lostLand = Math.floor(G.getRes('land').amount * 0.016 + 0.8);
                         var darkGain = Math.round(lostHousing * 0.75) + lostPeople + lostLand;
                         G.lose('housing', lostHousing, 'Dark decay'); G.lose('population', lostPeople, 'Dark decay'); G.lose('land', lostLand, 'Dark decay');
