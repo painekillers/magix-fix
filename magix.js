@@ -22026,7 +22026,7 @@ if (getObj("civ") != "1") {
             });
             //UNIT LOGIC
             G.logic['unit'] = function () {
-                var mult = G.doFunc('production multiplier');//global production multiplier - affects how many times the unit effects will be applied every tick
+                var mult = G.doFunc('production multiplier');//global production multiplier (affects how many times the unit effects will be applied every tick)
 
                 var len = G.unitsOwned.length;
                 //we turn the list of owned units into internally shuffled sections sorted by priority, then work through those in order
@@ -22104,7 +22104,6 @@ if (getObj("civ") != "1") {
                             }
                         }
                         if (me.amount > 0) {
-                            var waste = 0;
                             var idle = 0;
                             //run upkeep and check used resources; if we're short on either, waste away
                             for (var ii in me.unit.upkeep) {
@@ -22117,32 +22116,42 @@ if (getObj("civ") != "1") {
                                     if (spent < upkeep) idle = true;
                                 }
                             }
+
+                            // how many of this stack the use resources can actually support.
+                            // res.used already counts this stack's own reservation
+                            // so add it back to get our real headroom!
+                            var capacity = null;
                             for (var ii in me.unit.use) {
-                                var res = G.getRes(ii);
                                 var use = me.unit.use[ii];
-                                //if (res.amount<res.used) waste=1;
-                                //if (me.amount>0 && res.name=='worker') console.log('we need '+(use*(me.amount))+', we have '+(res.amount-res.used)+' for '+(me.amount)+' '+me.unit.name+'; deleting '+(waste,(use*(me.amount)-(res.amount-res.used))/use));
-                                if (use && (res.amount <= use * (me.amount) || res.amount < res.used)) waste = true;
+                                if (!use) continue;
+                                var res = G.getRes(ii);
+                                var supported = Math.floor((res.amount - res.used + use * me.amount) / use);
+                                capacity = (capacity === null) ? supported : Math.min(capacity, supported);
                             }
+                            var overage = (capacity === null) ? 0 : me.amount - capacity;
+
+                            // limitPer() is shared across every stack of this unit, so measure it against the total.
+                            var limit = G.testAnyLimit(me.unit.limitPer, 1);
+                            if (limit != -1) overage = Math.max(overage, G.getUnitAmount(me.unit.name) - limit);
+
                             for (var ii in me.unit.staff) {
                                 var res = G.getRes(ii);
                                 var use = me.unit.staff[ii];
-                                //if (res.amount<res.used) idle=1;
+                                // <= forces at least 1 unassigned member if they're all assigned to the building
+                                // we may never know if the big Orteil had this intentionally
+                                // but the use of <= elsewhere in main.js indicates that it's probably an oversight
                                 if (use && (res.amount <= use * (me.amount - me.idle) || res.amount < res.used)) idle = true;
                             }
                             for (var ii in me.mode.use) {
                                 var res = G.getRes(ii);
                                 var use = me.mode.use[ii];
-                                //if (res.amount<res.used) idle=1;
-                                if (use && (res.amount <= use * (me.amount - me.idle) || res.amount < res.used)) idle = true;
+                                if (use && (res.amount < use * (me.amount - me.idle) || res.amount < res.used)) idle = true;
                             }
-                            if (!G.testLimit(me.unit.limitPer, G.getUnitAmount(me.unit.name))) waste = true;
 
-                            if (me.name === "wizard") alert(me.amount + " " + idle + " " + me.idle)
-                            //if (idle) G.idleUnit(me,Math.ceil(idle));
-                            //if (waste) G.wasteUnit(me,Math.ceil(waste));
                             if (idle) G.idleUnit(me, Math.ceil((me.amount - me.idle) * 0.05));
-                            if (waste) G.wasteUnit(me, Math.ceil(me.amount * 0.05));
+                            //waste exactly what we cannot support instead of a flat 5% of the stack, so the queue
+                            //has no overshoot left to repurchase at full cost on the next tick
+                            if (overage > 0) G.wasteUnit(me, Math.min(Math.ceil(overage), me.amount));
                         }
                         if (!me.unit.visible) {
                             //if hidden disable it...truly disable refunding all usage
