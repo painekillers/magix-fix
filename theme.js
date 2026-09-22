@@ -77,9 +77,12 @@ export default {
             console.warn(`Could not find theme with name ${name}`)
             return
         }
-
+        
         window.theme = themes[name]
-
+        
+        // Yeah its weird we only load the CSS lowercase 
+        // Tbh I dont like loading the CSS differently to the js, might change this later
+        name = name.toLowerCase()
         await applyCSS(name)
 
         for (const func of subscription) {
