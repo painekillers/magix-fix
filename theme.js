@@ -23,7 +23,7 @@ const merge = (base, theme) => {
 const defaultTheme = await loadTheme("./themes/default.js")
 
 const themes = {
-    default: defaultTheme
+    Default: defaultTheme
 }
 
 const load = async (name, path) => {
@@ -35,7 +35,7 @@ const load = async (name, path) => {
 
 // Load themes here
 
-await load("dark", "./themes/dark.js")
+await load("Dark", "./themes/dark.js")
 
 let subscription = []
 

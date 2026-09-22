@@ -5,4 +5,4 @@ await import('./ui.js')
 
 Theme.subscribe(() => window.world.update())
 
-Theme.setTheme("default")
+Theme.setTheme("Default")

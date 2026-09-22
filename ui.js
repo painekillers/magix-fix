@@ -14,6 +14,7 @@ const searchResults = document.querySelector("#search-results")
 
 const themeButton = document.querySelector("#theme-button")
 const themeMenu = document.querySelector("#theme-menu")
+const themeGrid = document.querySelector("#theme-grid")
 
 searchButton.dataset.tooltip = "Search"
 themeButton.dataset.tooltip = "Theme"
@@ -39,24 +40,31 @@ themeButton.addEventListener("click", () => {
 })
 
 function updateThemeMenu() {
-    themeMenu.replaceChildren()
+    themeGrid.replaceChildren()
 
     for(const [name, theme] of Object.entries(Theme.themes)) {
         const entry = document.createElement("button")
         entry.className = "theme-entry"
 
-        entry.textContent = name
+        const preview = document.createElement("div")
+        preview.className = "theme-preview"
+
+        const label = document.createElement("div")
+        label.className = "theme-name"
+        label.textContent = name
 
         if(theme === Theme.current) {
             entry.classList.add("selected")
         }
+
+        entry.append(preview, label)
 
         entry.addEventListener("click", async () => {
             await Theme.setTheme(name)
             themeMenu.style.display = "none"
         })
 
-        themeMenu.append(entry)
+        themeGrid.append(entry)
     }
 }
 
