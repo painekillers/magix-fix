@@ -1,5 +1,6 @@
 import World from "./world/world.js"
 import Camera from "./world/camera.js"
+import SearchIndex from './search.js'
 
 import {
     Node,
@@ -132,47 +133,27 @@ canvas.addEventListener("wheel", e => {
     ]
 }, { passive: false })
 
-// Create Background
+window.recurse = false // Actual amount of layers parsed
 
-const background = new Image()
+window.bridge.calculateLayout(
+    "A",
+    window.recurse
+)
 
-background.src = "data:image/svg+xml," + encodeURIComponent(`
-<svg xmlns="http://www.w3.org/2000/svg" width="1920" height="1080">
-    <defs>
-        <linearGradient id="base" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stop-color="#f4f5f7"/>
-            <stop offset="100%" stop-color="#e8eaed"/>
-        </linearGradient>
+window.bridge.calculateDraw(
+    50,     // node width
+    50,     // node height
+    100,    // layer spacing
+    50      // node spacing
+)
 
-        <radialGradient id="light" cx="50%" cy="42%" r="65%">
-            <stop offset="0%" stop-color="#ffffff" stop-opacity="0.9"/>
-            <stop offset="60%" stop-color="#ffffff" stop-opacity="0.3"/>
-            <stop offset="100%" stop-color="#ffffff" stop-opacity="0"/>
-        </radialGradient>
+window.depth = null // Amount of nodes rendered
 
-        <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
-            <path
-                d="M 40 0 L 0 0 0 40"
-                fill="none"
-                stroke="#9da3ad"
-                stroke-width="1"
-                opacity="0.28"
-            />
-        </pattern>
+window.bridge.createObjects(window.depth)
 
-        <radialGradient id="fade" cx="50%" cy="50%" r="70%">
-            <stop offset="60%" stop-color="#ffffff" stop-opacity="0"/>
-            <stop offset="100%" stop-color="#c8ccd3" stop-opacity="0.2"/>
-        </radialGradient>
-    </defs>
-
-    <rect width="1920" height="1080" fill="url(#base)"/>
-    <rect width="1920" height="1080" fill="url(#light)"/>
-    <rect width="1920" height="1080" fill="url(#grid)"/>
-    <rect width="1920" height="1080" fill="url(#fade)"/>
-</svg>
-`)
-
-world.background = background
-
-background.onload = () => world.update()
+window.search = new SearchIndex(
+    Array.from(window.graph.nodes.values()).map(node => ({
+        name: node.id,
+        value: node
+    }))
+)

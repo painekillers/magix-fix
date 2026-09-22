@@ -1,3 +1,5 @@
+import Theme from "./theme.js"
+
 import Tooltip from "./tooltip.js"
 
 new Tooltip({
@@ -58,16 +60,7 @@ function updateSearchResults() {
         const focus = document.createElement("button")
         focus.dataset.tooltip = "Focus"
 
-        focus.innerHTML = `
-            <svg viewBox="0 0 24 24">
-                <circle cx="12" cy="12" r="7"/>
-                <circle cx="12" cy="12" r="2"/>
-                <path d="M12 2V5"/>
-                <path d="M12 19V22"/>
-                <path d="M2 12H5"/>
-                <path d="M19 12H22"/>
-            </svg>
-        `
+        focus.innerHTML = window.theme.focusButton
 
         if(!window.bridge.toObj?.has(result.entry.value)) {
             focus.disabled = true
@@ -81,16 +74,7 @@ function updateSearchResults() {
         const root = document.createElement("button")
         root.dataset.tooltip = "Set root"
 
-        root.innerHTML = `
-            <svg viewBox="0 0 24 24">
-                <circle cx="12" cy="5" r="2.5"/>
-                <circle cx="6" cy="19" r="2.5"/>
-                <circle cx="18" cy="19" r="2.5"/>
-                <path d="M12 7.5V12"/>
-                <path d="M12 12L6 16.5"/>
-                <path d="M12 12L18 16.5"/>
-            </svg>
-        `
+        root.innerHTML = window.theme.rootButton
 
         root.addEventListener("click", () => {
             window.bridge.calculateLayout(
@@ -117,6 +101,8 @@ function updateSearchResults() {
         searchResults.append(entry)
     }
 }
+
+Theme.subscribe(updateSearchResults)
 
 searchInput.addEventListener("input", updateSearchResults)
 
