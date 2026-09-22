@@ -12,15 +12,58 @@ const searchMenu = document.querySelector("#search-menu")
 const searchInput = document.querySelector("#search-input")
 const searchResults = document.querySelector("#search-results")
 
-searchButton.dataset.tooltip = "Search"
+const themeButton = document.querySelector("#theme-button")
+const themeMenu = document.querySelector("#theme-menu")
 
+searchButton.dataset.tooltip = "Search"
+themeButton.dataset.tooltip = "Theme"
+
+searchButton.innerHTML = window.theme.searchButton
 searchButton.addEventListener("click", () => {
     if(searchMenu.style.display === "block") {
         searchMenu.style.display = "none"
     } else {
         searchMenu.style.display = "block"
+        themeMenu.style.display = "none"
     }
 })
+
+themeButton.innerHTML = window.theme.themeButton
+themeButton.addEventListener("click", () => {
+    if(themeMenu.style.display === "block") {
+        themeMenu.style.display = "none"
+    } else {
+        themeMenu.style.display = "block"
+        searchMenu.style.display = "none"
+    }
+})
+
+function updateThemeMenu() {
+    themeMenu.replaceChildren()
+
+    for(const [name, theme] of Object.entries(Theme.themes)) {
+        const entry = document.createElement("button")
+        entry.className = "theme-entry"
+
+        entry.textContent = name
+
+        if(theme === Theme.current) {
+            entry.classList.add("selected")
+        }
+
+        entry.addEventListener("click", async () => {
+            await Theme.setTheme(name)
+            themeMenu.style.display = "none"
+        })
+
+        themeMenu.append(entry)
+    }
+}
+
+function updateThemeButtons() {
+    searchButton.innerHTML = window.theme.searchButton
+    themeButton.innerHTML = window.theme.themeButton
+}
 
 function updateSearchResults() {
     const query = searchInput.value
@@ -103,7 +146,11 @@ function updateSearchResults() {
 }
 
 Theme.subscribe(updateSearchResults)
+Theme.subscribe(updateThemeMenu)
+Theme.subscribe(updateThemeButtons)
 
 searchInput.addEventListener("input", updateSearchResults)
 
+updateThemeButtons()
+updateThemeMenu()
 updateSearchResults()

@@ -64,6 +64,14 @@ const applyCSS = async name => {
 export default {
     load,
 
+    get themes() {
+        return themes
+    },
+
+    get current() {
+        return window.theme
+    },
+
     async setTheme(name) {
         if (!(name in themes)) {
             console.warn(`Could not find theme with name ${name}`)

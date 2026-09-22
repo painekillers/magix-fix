@@ -6,25 +6,24 @@
   <meta name="viewport" content="width=device-width">
   <title>Tree Builder</title>
 
-  <link id="theme-css" href="./themes/default.css" rel="stylesheet" type="text/css" />
+  <link href="./themes/default.css" rel="stylesheet" type="text/css" />
+  <link id="theme-css" href="" rel="stylesheet" type="text/css" />
 </head>
 
 <body>
   <script type="module" src="main.js"></script>
   <canvas id="canvas"></canvas>
 
-  <button id="search-button" aria-label="Search">
-    <svg viewBox="0 0 24 24">
-        <circle cx="11" cy="11" r="6.5"></circle>
-        <line x1="16" y1="16" x2="21" y2="21"></line>
-    </svg>
-  </button>
+  <button id="search-button" aria-label="Search"></button>
 
   <div id="search-menu">
     <input id="search-input" type="text" placeholder="Search nodes...">
 
     <div id="search-results"></div>
   </div>
+
+  <button id="theme-button"></button>
+  <div id="theme-menu"></div>
 </body>
 
 </html>
