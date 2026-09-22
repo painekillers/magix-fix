@@ -1,7 +1,16 @@
+import Tooltip from "./tooltip.js"
+
+new Tooltip({
+    offset: 12,
+    duration: 120
+})
+
 const searchButton = document.querySelector("#search-button")
 const searchMenu = document.querySelector("#search-menu")
 const searchInput = document.querySelector("#search-input")
 const searchResults = document.querySelector("#search-results")
+
+searchButton.dataset.tooltip = "Search"
 
 searchButton.addEventListener("click", () => {
     if(searchMenu.style.display === "block") {
@@ -47,7 +56,18 @@ function updateSearchResults() {
         actions.className = "search-entry-actions"
 
         const focus = document.createElement("button")
-        focus.textContent = "Focus"
+        focus.dataset.tooltip = "Focus"
+
+        focus.innerHTML = `
+            <svg viewBox="0 0 24 24">
+                <circle cx="12" cy="12" r="7"/>
+                <circle cx="12" cy="12" r="2"/>
+                <path d="M12 2V5"/>
+                <path d="M12 19V22"/>
+                <path d="M2 12H5"/>
+                <path d="M19 12H22"/>
+            </svg>
+        `
 
         if(!window.bridge.toObj?.has(result.entry.value)) {
             focus.disabled = true
@@ -55,14 +75,22 @@ function updateSearchResults() {
 
         focus.addEventListener("click", () => {
             window.bridge.focus(result.entry.value)
+            searchMenu.style.display = "none"
         })
 
         const root = document.createElement("button")
-        root.textContent = "Set Root"
+        root.dataset.tooltip = "Set root"
 
-        focus.addEventListener("click", () => {
-            window.bridge.focus(result.entry.value)
-        })
+        root.innerHTML = `
+            <svg viewBox="0 0 24 24">
+                <circle cx="12" cy="5" r="2.5"/>
+                <circle cx="6" cy="19" r="2.5"/>
+                <circle cx="18" cy="19" r="2.5"/>
+                <path d="M12 7.5V12"/>
+                <path d="M12 12L6 16.5"/>
+                <path d="M12 12L18 16.5"/>
+            </svg>
+        `
 
         root.addEventListener("click", () => {
             window.bridge.calculateLayout(
@@ -71,13 +99,17 @@ function updateSearchResults() {
             )
 
             window.bridge.calculateDraw(
-                50,     // node width
-                50,     // node height
-                100,    // layer spacing
-                50      // node spacing
+                50,
+                50,
+                100,
+                50
             )
 
             window.bridge.createObjects(window.depth)
+
+            searchMenu.style.display = "none"
+
+            updateSearchResults()
         })
 
         actions.append(focus, root)

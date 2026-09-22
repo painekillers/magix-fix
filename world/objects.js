@@ -172,6 +172,7 @@ export class NodeInstance extends ImageInstance {
     #hovered = false
     #scale = 1
     #animation = null
+    #root = false
 
     constructor(world, x, y, width, height, node, image) {
         super(world, x, y, width, height)
@@ -180,12 +181,30 @@ export class NodeInstance extends ImageInstance {
         this.image = image
     }
 
+    set root(value) {
+        this.#root = value
+        this.world.update()
+    }
+
+    focus() {
+        setTimeout(() => {
+            this.#hovered = true
+            this.#animate()
+
+            setTimeout(() => {
+                if(this.world.hover !== this) {
+                    this.#hovered = false
+                    this.#animate()
+                }
+            }, 600)
+        }, 150)
+    }
+
     #animate() {
         if(this.#animation) return
-
-        const target = this.#hovered ? 1.04 : 1
-
+        
         const animate = () => {
+            const target = this.#hovered ? 1.04 : 1
             const difference = target - this.#scale
 
             if(Math.abs(difference) < 0.001) {
@@ -219,58 +238,49 @@ export class NodeInstance extends ImageInstance {
 
         ctx.save()
 
-        // Soft depth
         ctx.shadowColor = "rgba(0, 0, 0, 0.14)"
         ctx.shadowBlur = this.#hovered ? 16 : 8
         ctx.shadowOffsetY = this.#hovered ? 4 : 2
 
-        // Surface
         ctx.fillStyle = "#f8f8f8"
 
         ctx.beginPath()
-        ctx.roundRect(
-            x,
-            y,
-            width,
-            height,
-            radius
-        )
+        ctx.roundRect(x, y, width, height, radius)
         ctx.fill()
 
         ctx.shadowColor = "transparent"
 
-        // Image
         ctx.save()
 
         ctx.beginPath()
-        ctx.roundRect(
-            x,
-            y,
-            width,
-            height,
-            radius
-        )
+        ctx.roundRect(x, y, width, height, radius)
         ctx.clip()
 
         ctx.globalAlpha = this.#hovered ? 1 : 0.92
-
         super.draw(ctx)
 
         ctx.restore()
 
-        // Subtle edge
         ctx.beginPath()
-        ctx.roundRect(
-            x,
-            y,
-            width,
-            height,
-            radius
-        )
+        ctx.roundRect(x, y, width, height, radius)
 
         ctx.lineWidth = 1
         ctx.strokeStyle = "rgba(0, 0, 0, 0.08)"
         ctx.stroke()
+
+        if(this.#root) {
+            ctx.beginPath()
+            ctx.arc(
+                x + width - 9,
+                y + 9,
+                3,
+                0,
+                Math.PI * 2
+            )
+
+            ctx.fillStyle = "rgba(0, 0, 0, 0.25)"
+            ctx.fill()
+        }
 
         ctx.restore()
     }

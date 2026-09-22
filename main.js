@@ -2,7 +2,7 @@ import SearchIndex from './search.js'
 
 import "./setup.js"
 
-window.recurse = false // Actual amount of nodes parsed
+window.recurse = false // Actual amount of layers parsed
 
 window.bridge.calculateLayout(
     "A",

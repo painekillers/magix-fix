@@ -101,12 +101,10 @@ export class LayoutGraph {
 
             if(!fromNode) return
 
-            const ids = [
-                ln.node.id,
-                fromNode.node.id
-            ].sort()
+            const a = `${ln.layer}:${ln.ind}`
+            const b = `${from.layer}:${from.ind}`
 
-            const key = ids.join("|")
+            const key = [a, b].sort().join("|")
 
             if(connections.has(key)) {
                 return
@@ -127,9 +125,17 @@ export class LayoutGraph {
         while (qi < queue.length) {
             const { node, layer, from } = queue[qi++]
 
-            if (visited.has(node) && !recurse) {
+            if(recurse && Math.abs(layer) > recurse) {
+                continue
+            }
+
+            const key = recurse
+                ? `${node.id}|${layer}`
+                : node.id
+
+            if(visited.has(key)) {
                 if(from) {
-                    const pos = visited.get(node)
+                    const pos = visited.get(key)
                     const ln = this.layers.get(pos.layer)[pos.ind]
 
                     addConnection(ln, from)
@@ -138,11 +144,7 @@ export class LayoutGraph {
                 continue
             }
 
-            if (!this.layers.has(layer)) {
-                if (recurse && Math.abs(layer) > recurse) {
-                    continue
-                }
-
+            if(!this.layers.has(layer)) {
                 this.layers.set(layer, [])
             }
 
@@ -155,7 +157,7 @@ export class LayoutGraph {
                 ind: this.layers.get(layer).length - 1
             }
 
-            visited.set(node, pos)
+            visited.set(key, pos)
 
             if(from) {
                 addConnection(ln, from)
@@ -224,27 +226,50 @@ export class DrawGraph {
         this.nodes = []
         this.connections = []
 
-        const layers = Array.from(layoutGraph.layers.entries()).sort((a, b) => a[0] - b[0])
+        const drawNodes = new Map()
 
-        let y = 0
+        const layers = Array.from(layoutGraph.layers.entries())
+            .sort((a, b) => a[0] - b[0])
+
         for (const [layerIndex, layerNodes] of layers) {
-            const layerWidth = layerNodes.length * nodeWidth + (layerNodes.length - 1) * nodeSpacing
+            const layerWidth =
+                layerNodes.length * nodeWidth +
+                (layerNodes.length - 1) * nodeSpacing
+
             let x = -layerWidth / 2 + nodeWidth / 2
 
+            const y =
+                layerIndex * (nodeHeight + layerSpacing)
+
             for (const layoutNode of layerNodes) {
-                const drawNode = new DrawNode(layoutNode, x, y, nodeWidth, nodeHeight)
+                const drawNode = new DrawNode(
+                    layoutNode,
+                    x,
+                    y,
+                    nodeWidth,
+                    nodeHeight
+                )
+
                 this.nodes.push(drawNode)
+                drawNodes.set(layoutNode, drawNode)
 
                 x += nodeWidth + nodeSpacing
             }
-            y += nodeHeight + layerSpacing
         }
 
         for (const drawNode of this.nodes) {
             for (const connection of drawNode.layoutNode.connected) {
-                const toDrawNode = this.nodes.find(n => n.layoutNode === layoutGraph.layers.get(connection.layer)[connection.ind])
+                const toLayoutNode =
+                    layoutGraph.layers
+                        .get(connection.layer)[connection.ind]
+
+                const toDrawNode =
+                    drawNodes.get(toLayoutNode)
+
                 if (toDrawNode) {
-                    this.connections.push(new DrawConnection(drawNode, toDrawNode))
+                    this.connections.push(
+                        new DrawConnection(drawNode, toDrawNode)
+                    )
                 }
             }
         }

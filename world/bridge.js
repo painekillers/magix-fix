@@ -12,6 +12,8 @@ export default class Bridge {
         this.obj = null
         this.toObj = null
         this.toNode = null
+
+        this.root = null
     }
 
     #cleanWorld() {
@@ -27,6 +29,7 @@ export default class Bridge {
     calculateLayout(root, recurse){ // Real maxdepth, since we cant actually make it infinite
         this.layout = new LayoutGraph(this.graph, root, recurse)
         // Since JS is goofy like this ill just have recurse be a number when we want recursive
+        this.root = this.graph.nodes.get(root)
 
         // Invalidate everything else
         this.draw = null
@@ -49,6 +52,8 @@ export default class Bridge {
             return
         }
 
+        this.#cleanWorld()
+        
         this.obj = []
         this.toObj = new Map()
         this.toNode = new Map()
@@ -94,18 +99,25 @@ export default class Bridge {
                 drawNode.layoutNode.node
             )
 
+            obj.root =
+                drawNode.layoutNode.node === this.root
+
             this.obj.push(obj)
-            this.toNode.set(obj, drawNode.layoutNode.node)
-            this.toObj.set(drawNode.layoutNode.node, obj)
+
+            this.toNode.set(
+                obj,
+                drawNode.layoutNode.node
+            )
+
+            this.toObj.set(
+                drawNode.layoutNode.node,
+                obj
+            )
+
             this.world.addObject(obj)
         }
 
-        console.log(
-            this.draw.connections.map(connection => ({
-                from: connection.fromNode.layoutNode.node.id,
-                to: connection.toNode.layoutNode.node.id
-            }))
-        )
+        this.focus(this.root)
     }
 
     focus(node) {
@@ -126,6 +138,10 @@ export default class Bridge {
             obj.pos.y
         ]
 
-        this.world.update()
+        this.world.camera.zoom = 1.5
+
+        obj.focus()
+
+        this.world.update?.()
     }
 }

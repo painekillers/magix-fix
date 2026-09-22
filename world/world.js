@@ -12,14 +12,19 @@ export default class World {
     #objects = []
     #background
 
+    #mouse = null
+
     constructor(canvas) {
         this.#canvas = canvas
         this.#ctx = canvas.getContext("2d")
 
         canvas.addEventListener("mousemove", e => {
-            if (this.#paused) return
+            this.#mouse = e
 
+            if (this.#paused) return
+            
             const pos = this.#mouseWorldPosition(e)
+
             const object = this.#objectAt(pos.x, pos.y)
 
             if (object === this.#hoveredObject) {
@@ -33,7 +38,7 @@ export default class World {
             this.#hoveredObject?.mouseEnter?.()
         })
 
-        canvas.addEventListener("click", e => {
+        canvas.addEventListener("mousedown", e => {
             if (this.#paused) return
 
             const pos = this.#mouseWorldPosition(e)
@@ -70,6 +75,10 @@ export default class World {
         this.update()
     }
 
+    get hover() {
+        return this.#hoveredObject
+    }
+
     addObject(obj) {
         if (this.#paused) return
 
@@ -87,11 +96,10 @@ export default class World {
     removeObject(obj) {
         if (this.#paused) return
 
-        const index = this.#objects.indexOf(obj); // $ is dis slow
+        const index = this.#objects.indexOf(obj)
 
         if (index !== -1) {
-            this.#objects[index] = this.#objects[this.#objects.length - 1];
-            this.#objects.pop();
+            this.#objects.splice(index, 1)
         }
 
         if (this.#hoveredObject === obj) {
@@ -113,6 +121,8 @@ export default class World {
             }
             return true
         })
+
+        this.update()
     }
 
     clear() {
@@ -133,6 +143,19 @@ export default class World {
     update() {
         if (this.#paused) return
         if (this.#frameRequested) return
+
+        if (this.#mouse) {
+            const pos = this.#mouseWorldPosition(this.#mouse)
+            const object = this.#objectAt(pos.x, pos.y)
+
+            if (object !== this.#hoveredObject) {
+                this.#hoveredObject?.mouseLeave?.()
+
+                this.#hoveredObject = object
+
+                this.#hoveredObject?.mouseEnter?.()
+            }
+        }
 
         this.#frameRequested = true
 
@@ -192,6 +215,8 @@ export default class World {
     #hoveredObject = null
 
     #mouseWorldPosition(e) {
+        if (!e) { return {x: null, y: null} }
+
         const rect = this.#canvas.getBoundingClientRect()
 
         const x =
