@@ -173,5 +173,7 @@ export class NodeInstance extends ImageInstance {
 
     click() {
         console.log("clicked node:", this.node.val)
+
+        window.nodeMenu(this.node)
     }
 }

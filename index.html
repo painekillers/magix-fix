@@ -17,14 +17,34 @@
   <button id="search-button" aria-label="Search"></button>
 
   <div id="search-menu">
+    <div class="menu-header">
+      <span>Search</span>
+      <button id="search-menu-close">×</button>
+    </div>
+
     <input id="search-input" type="text" placeholder="Search nodes...">
 
     <div id="search-results"></div>
   </div>
 
   <button id="theme-button"></button>
+
   <div id="theme-menu">
+    <div class="menu-header">
+      <span>Theme</span>
+      <button id="theme-menu-close">×</button>
+    </div>
+
     <div id="theme-grid"></div>
+  </div>
+
+  <div id="node-menu">
+    <div class="menu-header">
+      <span id="node-menu-title">Node</span>
+      <button id="node-menu-close">×</button>
+    </div>
+
+    <div id="node-menu-content"></div>
   </div>
 </body>
 
