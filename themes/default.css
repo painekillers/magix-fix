@@ -66,8 +66,8 @@ canvas {
     left: 50%;
     top: 50%;
 
-    width: 700px;
-    height: 600px;
+    width: min(700px, calc(100% - 32px));
+    height: min(600px, calc(100% - 32px));
     padding: 16px;
 
     transform: translate(-50%, -50%);
@@ -357,8 +357,8 @@ canvas {
     left: 50%;
     top: 50%;
 
-    width: 650px;
-    height: 520px;
+    width: min(650px, calc(100% - 32px));
+    height: min(520px, calc(100% - 32px));
     padding: 16px;
 
     transform: translate(-50%, -50%);
@@ -471,8 +471,8 @@ canvas {
     left: 50%;
     top: 50%;
 
-    width: 700px;
-    height: 600px;
+    width: min(700px, calc(100% - 32px));
+    height: min(600px, calc(100% - 32px));
     padding: 16px;
 
     transform: translate(-50%, -50%);
