@@ -1,4 +1,6 @@
 export default class Tooltip {
+    #target = null
+
     constructor({
         offset = 8,
         duration = 120
@@ -18,22 +20,33 @@ export default class Tooltip {
 
             if(!target) return
 
-            this.show(
-                target.dataset.tooltip,
-                target
-            )
+            this.show(target.dataset.tooltip, target)
         })
 
         document.addEventListener("mouseout", e => {
             const target = e.target.closest("[data-tooltip]")
 
-            if(!target) return
+            if(target !== this.#target) return
 
             this.hide()
+        })
+
+        new MutationObserver(() => {
+            if(
+                this.#target &&
+                !document.contains(this.#target)
+            ) {
+                this.hide()
+            }
+        }).observe(document.body, {
+            childList: true,
+            subtree: true
         })
     }
 
     show(text, target) {
+        this.#target = target
+
         this.element.textContent = text
 
         const rect = target.getBoundingClientRect()
@@ -48,6 +61,7 @@ export default class Tooltip {
     }
 
     hide() {
+        this.#target = null
         this.element.classList.remove("visible")
     }
 }
