@@ -33,8 +33,6 @@ const load = async (name, path) => {
     )
 }
 
-// Load themes here
-
 await load("Dark", "./themes/dark.js")
 
 let subscription = []
@@ -77,20 +75,20 @@ export default {
             console.warn(`Could not find theme with name ${name}`)
             return
         }
-        
+
         window.theme = themes[name]
-        
-        // Yeah its weird we only load the CSS lowercase 
-        // Tbh I dont like loading the CSS differently to the js, might change this later
+
         name = name.toLowerCase()
+
         await applyCSS(name)
+
+        if (window.world) {
+            window.world.theme = window.theme
+            window.world.background = window.theme.background
+        }
 
         for (const func of subscription) {
             func()
-        }
-
-        if (window.world) {
-            window.world.background = window.theme.background
         }
     },
 

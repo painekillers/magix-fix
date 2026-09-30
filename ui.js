@@ -2,6 +2,16 @@ import Theme from "./theme.js"
 
 import Tooltip from "./tooltip.js"
 
+import World from "./world/world.js"
+import Camera from "./world/camera.js"
+
+import {
+    Node,
+    Graph
+} from "./graph.js"
+
+import Bridge from "./world/bridge.js"
+
 new Tooltip({
     offset: 12,
     duration: 120
@@ -74,6 +84,12 @@ nodeMenuClose.addEventListener("click", () => {
     nodeMenu.style.display = "none"
 })
 
+const previewGraph = new Graph([
+    new Node("A", [], ["B", "C"]),
+    new Node("B", ["A"], []),
+    new Node("C", ["A"], [])
+])
+
 function updateThemeMenu() {
     themeGrid.replaceChildren()
 
@@ -81,8 +97,43 @@ function updateThemeMenu() {
         const entry = document.createElement("button")
         entry.className = "theme-entry"
 
-        const preview = document.createElement("div")
+        const preview = document.createElement("canvas")
         preview.className = "theme-preview"
+        preview.width = 180
+        preview.height = 40
+
+        const world = new World(preview, theme)
+        world.background = theme.background
+
+        const camera = new Camera(world)
+
+        world.camera = camera
+
+        world.resize(
+            preview.width,
+            preview.height
+        )
+
+        const bridge = new Bridge(
+            previewGraph,
+            world
+        )
+
+        bridge.calculateLayout(
+            "A",
+            false
+        )
+
+        bridge.calculateDraw(
+            50,
+            50,
+            100,
+            50
+        )
+
+        bridge.createObjects(null)
+
+        world.update()
 
         const label = document.createElement("div")
         label.className = "theme-name"

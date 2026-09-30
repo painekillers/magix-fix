@@ -4,6 +4,7 @@ export default class World {
     #ctx
 
     #camera
+    #theme
 
     #paused = false
 
@@ -12,40 +13,11 @@ export default class World {
     #objects = []
     #background
 
-    #mouse = null
-
-    constructor(canvas) {
+    constructor(canvas, theme) {
+        this.#theme = theme
         this.#canvas = canvas
         this.#ctx = canvas.getContext("2d")
 
-        canvas.addEventListener("mousemove", e => {
-            this.#mouse = e
-
-            if (this.#paused) return
-            
-            const pos = this.#mouseWorldPosition(e)
-
-            const object = this.#objectAt(pos.x, pos.y)
-
-            if (object === this.#hoveredObject) {
-                return
-            }
-
-            this.#hoveredObject?.mouseLeave?.()
-
-            this.#hoveredObject = object
-
-            this.#hoveredObject?.mouseEnter?.()
-        })
-
-        canvas.addEventListener("mousedown", e => {
-            if (this.#paused) return
-
-            const pos = this.#mouseWorldPosition(e)
-            const object = this.#objectAt(pos.x, pos.y)
-
-            object?.click?.()
-        })
     }
 
     set paused(value) {
@@ -59,6 +31,15 @@ export default class World {
 
     get paused() {
         return this.#paused
+    }
+
+    set theme(value) {
+        this.#theme = value
+        this.update()
+    }
+
+    get theme() {
+        return this.#theme
     }
 
     set camera(cam) {
@@ -82,12 +63,12 @@ export default class World {
     addObject(obj) {
         if (this.#paused) return
 
-        let index = this.#objects.findIndex(e => e.z > obj.z);// $ is dis slow
+        let index = this.#objects.findIndex(e => e.z > obj.z)
 
         if (index === -1) {
-            this.#objects.push(obj);
+            this.#objects.push(obj)
         } else {
-            this.#objects.splice(index, 0, obj);
+            this.#objects.splice(index, 0, obj)
         }
 
         this.update()
@@ -119,6 +100,7 @@ export default class World {
                 }
                 return false
             }
+
             return true
         })
 
@@ -144,19 +126,6 @@ export default class World {
         if (this.#paused) return
         if (this.#frameRequested) return
 
-        if (this.#mouse) {
-            const pos = this.#mouseWorldPosition(this.#mouse)
-            const object = this.#objectAt(pos.x, pos.y)
-
-            if (object !== this.#hoveredObject) {
-                this.#hoveredObject?.mouseLeave?.()
-
-                this.#hoveredObject = object
-
-                this.#hoveredObject?.mouseEnter?.()
-            }
-        }
-
         this.#frameRequested = true
 
         requestAnimationFrame(() => {
@@ -170,7 +139,6 @@ export default class World {
             )
 
             if (this.#background) {
-                
                 this.#ctx.drawImage(
                     this.#background,
                     0,
@@ -214,8 +182,13 @@ export default class World {
 
     #hoveredObject = null
 
-    #mouseWorldPosition(e) {
-        if (!e) { return {x: null, y: null} }
+    mouseWorldPosition(e) {
+        if (!e) {
+            return {
+                x: null,
+                y: null
+            }
+        }
 
         const rect = this.#canvas.getBoundingClientRect()
 
@@ -235,7 +208,7 @@ export default class World {
         }
     }
 
-    #objectAt(x, y) {
+    objectAt(x, y) {
         for (let i = this.#objects.length - 1; i >= 0; i--) {
             const object = this.#objects[i]
 
@@ -258,5 +231,4 @@ export default class World {
 
         return null
     }
-
 }

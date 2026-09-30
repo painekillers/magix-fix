@@ -11,8 +11,10 @@ import Bridge from "./world/bridge.js"
 
 import nodes from "./nodes.js"
 
+const canvas = document.querySelector("#canvas")
+
 // Create world
-const world = new World(canvas)
+const world = new World(canvas, window.theme)
 
 const cam = new Camera(world)
 
@@ -31,6 +33,34 @@ window.addEventListener("resize", () => {
         window.innerWidth,
         window.innerHeight
     )
+})
+
+// Interaction
+
+let hovered = null
+
+canvas.addEventListener("mousemove", e => {
+    if (world.paused) return
+
+    const pos = world.mouseWorldPosition(e)
+    const object = world.objectAt(pos.x, pos.y)
+
+    if (object === hovered) return
+
+    hovered?.mouseLeave?.()
+
+    hovered = object
+
+    hovered?.mouseEnter?.()
+})
+
+canvas.addEventListener("mousedown", e => {
+    if (world.paused) return
+
+    const pos = world.mouseWorldPosition(e)
+    const object = world.objectAt(pos.x, pos.y)
+
+    object?.click?.()
 })
 
 

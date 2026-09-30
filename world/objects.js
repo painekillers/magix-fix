@@ -140,7 +140,7 @@ export class Line extends Object {
     }
 
     draw(ctx) {
-        window.theme.draw.line(ctx, this)
+        this.world.theme.draw.line(ctx, this)
     }
 }
 
@@ -156,19 +156,19 @@ export class NodeInstance extends ImageInstance {
     }
 
     focus() {
-        window.theme.focus(this)
+        this.world.theme.focus(this)
     }
 
     mouseEnter() {
-        window.theme.mouseEnter(this)
+        this.world.theme.mouseEnter(this)
     }
 
     mouseLeave() {
-        window.theme.mouseLeave(this)
+        this.world.theme.mouseLeave(this)
     }
 
     draw(ctx) {
-        window.theme.draw.node(ctx, this)
+        this.world.theme.draw.node(ctx, this)
     }
 
     click() {
