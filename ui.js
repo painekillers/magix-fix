@@ -84,14 +84,24 @@ nodeMenuClose.addEventListener("click", () => {
     nodeMenu.style.display = "none"
 })
 
+const blank = new Image()
+blank.src = "data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs="
+
 const previewGraph = new Graph([
-    new Node("A", [], ["B", "C"]),
-    new Node("B", ["A"], []),
-    new Node("C", ["A"], [])
+    new Node("A", [], ["B", "C"], {icon: blank}),
+    new Node("B", ["A"], [], {icon: blank}),
+    new Node("C", ["A"], [], {icon: blank})
 ])
 
 function updateThemeMenu() {
     themeGrid.replaceChildren()
+
+    const hidden = getComputedStyle(themeMenu).display === "none"
+
+    if(hidden) {
+        themeMenu.style.visibility = "hidden"
+        themeMenu.style.display = "block"
+    }
 
     for(const [name, theme] of Object.entries(Theme.themes)) {
         const entry = document.createElement("button")
@@ -99,8 +109,18 @@ function updateThemeMenu() {
 
         const preview = document.createElement("canvas")
         preview.className = "theme-preview"
-        preview.width = 180
-        preview.height = 40
+
+        const label = document.createElement("div")
+        label.className = "theme-name"
+        label.textContent = name
+
+        entry.append(preview, label)
+        themeGrid.append(entry)
+
+        const rect = preview.getBoundingClientRect()
+
+        preview.width = rect.width
+        preview.height = rect.height
 
         const world = new World(preview, theme)
         world.background = theme.background
@@ -127,30 +147,30 @@ function updateThemeMenu() {
         bridge.calculateDraw(
             50,
             50,
-            100,
+            70,
             50
         )
 
         bridge.createObjects(null)
 
-        world.update()
+        camera.zoom = 0.4
+        camera.pos = [-40, 40]
 
-        const label = document.createElement("div")
-        label.className = "theme-name"
-        label.textContent = name
+        world.update()
 
         if(theme === Theme.current) {
             entry.classList.add("selected")
         }
 
-        entry.append(preview, label)
-
         entry.addEventListener("click", async () => {
             await Theme.setTheme(name)
             themeMenu.style.display = "none"
         })
+    }
 
-        themeGrid.append(entry)
+    if(hidden) {
+        themeMenu.style.display = "none"
+        themeMenu.style.visibility = ""
     }
 }
 

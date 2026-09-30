@@ -96,7 +96,8 @@ export default class Bridge {
                 drawNode.y,
                 drawNode.width,
                 drawNode.height,
-                drawNode.layoutNode.node
+                drawNode.layoutNode.node,
+                drawNode.layoutNode.node.val?.icon
             )
 
             obj.root =
