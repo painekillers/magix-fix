@@ -66,11 +66,12 @@ export class Graph {
 }
 
 export class LayoutNode {
-    constructor(node, l) {
+    constructor(node, l, original = null) {
         this.node = node
         this.connected = []
 
         this.layer = l
+        this.original = original
     }
 
     addConnection(c){
@@ -125,11 +126,15 @@ export class LayoutGraph {
         while (qi < queue.length) {
             const { node, layer, from } = queue[qi++]
 
-            if(recurse && Math.abs(layer) > recurse) {
+            if(typeof recurse == "number" && Math.abs(layer) > recurse) {
                 continue
             }
 
-            const key = recurse
+            if(!this.layers.has(layer)) {
+                this.layers.set(layer, [])
+            }
+
+            const key = typeof recurse == "number"
                 ? `${node.id}|${layer}`
                 : node.id
 
@@ -138,14 +143,20 @@ export class LayoutGraph {
                     const pos = visited.get(key)
                     const ln = this.layers.get(pos.layer)[pos.ind]
 
-                    addConnection(ln, from)
+                    //holy crap i cannot think bruh
+                    if(((recurse === false) || (recurse === null)) && pos.layer !== layer) { 
+                        if(recurse === null) { continue }
+                        const fn = new LayoutNode(node, layer, this.layers.get(pos.layer)[pos.ind])
+                        this.layers.get(layer).push(fn)
+
+                        addConnection(fn, from)
+                    } else {
+                        addConnection(ln, from)
+
+                    }
                 }
 
                 continue
-            }
-
-            if(!this.layers.has(layer)) {
-                this.layers.set(layer, [])
             }
 
             const ln = new LayoutNode(node, layer)

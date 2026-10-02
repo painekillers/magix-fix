@@ -141,7 +141,7 @@ function updateThemeMenu() {
 
         bridge.calculateLayout(
             "A",
-            false
+            null
         )
 
         bridge.calculateDraw(

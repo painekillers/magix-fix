@@ -97,7 +97,8 @@ export default class Bridge {
                 drawNode.width,
                 drawNode.height,
                 drawNode.layoutNode.node,
-                drawNode.layoutNode.node.val?.icon
+                drawNode.layoutNode.node.val?.icon,
+                drawNode
             )
 
             obj.root =
@@ -105,15 +106,17 @@ export default class Bridge {
 
             this.obj.push(obj)
 
-            this.toNode.set(
-                obj,
-                drawNode.layoutNode.node
-            )
+            if (drawNode.layoutNode.original === null) {
+                this.toNode.set(
+                    obj,
+                    drawNode.layoutNode.node
+                )
 
-            this.toObj.set(
-                drawNode.layoutNode.node,
-                obj
-            )
+                this.toObj.set(
+                    drawNode.layoutNode.node,
+                    obj
+                )
+            }
 
             this.world.addObject(obj)
         }

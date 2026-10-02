@@ -60,7 +60,15 @@ canvas.addEventListener("mousedown", e => {
     const pos = world.mouseWorldPosition(e)
     const object = world.objectAt(pos.x, pos.y)
 
-    object?.click?.()
+    if(object) {
+        console.log("clicked node:", object.node.val)
+
+        if(object.drawNode.layoutNode.original === null) {
+            window.nodeMenu(object.node)
+        } else {
+            bridge.focus(object.drawNode.layoutNode.original.node)
+        }
+    }
 })
 
 

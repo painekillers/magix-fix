@@ -141,8 +141,11 @@ export default {
             const pos = object.pos
             const size = object.size
 
-            const width = size.width * object.scale
-            const height = size.height * object.scale
+            const rwidth = size.width * object.scale
+            const rheight = size.height * object.scale
+
+            const width = object.drawNode.layoutNode.original === null ? rwidth : rwidth/1.5
+            const height = object.drawNode.layoutNode.original === null ? rheight : rheight/1.5
 
             const x = pos.x - width / 2
             const y = pos.y - height / 2

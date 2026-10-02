@@ -145,7 +145,7 @@ export class Line extends Object {
 }
 
 export class NodeInstance extends ImageInstance {
-    constructor(world, x, y, width, height, node, image) {
+    constructor(world, x, y, width, height, node, image, drawNode) {
         super(world, x, y, width, height, image)
 
         this.node = node
@@ -153,6 +153,8 @@ export class NodeInstance extends ImageInstance {
         this.scale = 1
         this.animation = null
         this.root = false
+
+        this.drawNode = drawNode
     }
 
     focus() {
@@ -169,11 +171,5 @@ export class NodeInstance extends ImageInstance {
 
     draw(ctx) {
         this.world.theme.draw.node(ctx, this)
-    }
-
-    click() {
-        console.log("clicked node:", this.node.val)
-
-        window.nodeMenu(this.node)
     }
 }
