@@ -149,6 +149,8 @@ export default {
 
             const radius = 10
 
+            const fake = object.drawNode.layoutNode.original !== null
+
             ctx.save()
 
             ctx.shadowColor = "rgba(0, 0, 0, 0.14)"
@@ -186,7 +188,13 @@ export default {
 
             ctx.lineWidth = 1
             ctx.strokeStyle = "rgba(0, 0, 0, 0.08)"
+
+            if(fake) {
+                ctx.setLineDash([4, 4])
+            }
+
             ctx.stroke()
+            ctx.setLineDash([])
 
             if(object.root) {
                 ctx.beginPath()
