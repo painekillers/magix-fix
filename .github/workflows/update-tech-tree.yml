@@ -28,10 +28,6 @@ jobs:
 
           rsync -av tree-builder/themes/ tech-tree/themes/
 
-      - name: Create update branch
-        run: |
-          git checkout -b update-tech-tree
-
       - name: Commit changes
         run: |
           git config user.name "github-actions[bot]"
@@ -40,6 +36,6 @@ jobs:
           git add tech-tree
           git diff --cached --quiet || git commit -m "Update tech-tree from tree-builder"
 
-      - name: Push update branch
+      - name: Push changes
         run: |
-          git push origin update-tech-tree
+          git push origin HEAD:${{ github.ref_name }}
