@@ -171,7 +171,7 @@ canvas.addEventListener("wheel", e => {
     ]
 }, { passive: false })
 
-window.recurse = false // Actual amount of layers parsed
+window.recurse = true // Actual amount of layers parsed
 
 window.bridge.calculateLayout(
     "A",
