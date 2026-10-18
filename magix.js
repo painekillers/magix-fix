@@ -1293,6 +1293,8 @@ if (getObj("civ") != "1") {
                     G.getDict('firework crafting').req = { 'culture of celebration': true, 'tribalism': true };
                     G.getDict('artisan of new year').req = { 'culture of celebration': true, 'firework crafting': true, 'tribalism': true };
                     G.getDict('firework launching').req = { 'culture of celebration': true, 'firework crafting': true, 'tribalism': true };
+                    G.getDict('reckless pyrotechnics').req = { 'culture of celebration': true, 'firework launching': true, 'tribalism': true };
+                    G.getDict('firework daredevil').req = { 'culture of celebration': true, 'reckless pyrotechnics': true, 'tribalism': true };
                     G.getDict('dark essenced fireworks').req = { 'culture of celebration': true, 'firework crafting': true, 'Wizard complex': true, 'tribalism': true };
                 }
 
@@ -6301,7 +6303,7 @@ if (getObj("civ") != "1") {
             });
             new G.Res({
                 name: 'blue firework',
-                desc: 'Happy New Year! You can launch this firework high into the sky...Provides [happiness] for every firework launched into the sky.',
+                desc: 'A bright New Year firework made for public displays. Launch it from a [firework launcher] to turn a brief flash in the sky into [happiness].',
                 icon: [2, 0, 'seasonal'],
                 tick: function (me, tick) {
                     var toSpoil = me.amount * 0.009;
@@ -6312,7 +6314,7 @@ if (getObj("civ") != "1") {
             });
             new G.Res({
                 name: 'orange firework',
-                desc: 'Happy New Year! You can launch this firework high into the sky...Provides [happiness] for every firework launched into the sky.',
+                desc: 'A warm-colored New Year firework made for public displays. Launch it from a [firework launcher] to turn a brief flash in the sky into [happiness].',
                 icon: [1, 0, 'seasonal'],
                 tick: function (me, tick) {
                     var toSpoil = me.amount * 0.009;
@@ -6324,7 +6326,7 @@ if (getObj("civ") != "1") {
 
             new G.Res({
                 name: 'dark blue firework',
-                desc: 'Happy New Year! You can launch this firework high into the sky...Provides [happiness] for every firework launched into the sky. This is a [dark essence,Dark-essenced] firework so that it can unleash its spectacular show during the day too!', icon: [5, 0, 'seasonal'],
+                desc: 'A [dark essence,Dark-essenced] blue firework whose display remains striking even during the day. Launch it from a [firework launcher] to generate [happiness].', icon: [5, 0, 'seasonal'],
                 tick: function (me, tick) {
                     var toSpoil = me.amount * 0.009;
                     var spent = G.lose(me.name, randomFloor(toSpoil), 'decay');
@@ -6334,7 +6336,7 @@ if (getObj("civ") != "1") {
             });
             new G.Res({
                 name: 'dark orange firework',
-                desc: 'Happy New Year! You can launch this firework high into the sky...Provides [happiness] for every firework launched into the sky. This is a [dark essence,Dark-essenced] firework so that it can unleash its spectacular show during the day too!',
+                desc: 'A [dark essence,Dark-essenced] orange firework whose display remains striking even during the day. Launch it from a [firework launcher] to generate [happiness].',
                 icon: [4, 0, 'seasonal'],
                 tick: function (me, tick) {
                     var toSpoil = me.amount * 0.009;
@@ -6345,7 +6347,7 @@ if (getObj("civ") != "1") {
             });
             new G.Res({
                 name: 'firecracker',
-                desc: '[firecracker]s are fireworks but without [thread] attached.',
+                desc: 'A compact seasonal firework. [firework launcher,Firework launchers] can use it for a modest show, while [firework daredevil]s can squeeze out more [happiness] at the cost of an accident risk.',
                 icon: [3, 0, 'seasonal'],
                 tick: function (me, tick) {
                     var toSpoil = me.amount * 0.009;
@@ -10350,7 +10352,7 @@ if (getObj("civ") != "1") {
             new G.Unit({
                 name: 'artisan of new year',
                 displayName: 'Artisan of the New Year',
-                desc: 'This guy can craft New Year fireworks as a celebration, and will consume [paper] and [thread] to finish it up.',
+                desc: 'A seasonal artisan who turns [paper] and [thread] into fireworks for New Year celebrations. Basic colored fireworks are produced immediately; [firecracker]s require [firework launching], and advanced variants require [dark essenced fireworks].',
                 icon: [19, 0, 'seasonal'],
                 cost: {},
                 use: { 'worker': 1 },
@@ -10358,7 +10360,7 @@ if (getObj("civ") != "1") {
                 effects: [
                     { type: 'gather', what: { 'blue firework': 0.75 }, every: 3 },
                     { type: 'gather', what: { 'orange firework': 0.75 }, every: 3 },
-                    { type: 'gather', what: { 'firecracker': 1 }, every: 3 },
+                    { type: 'gather', what: { 'firecracker': 1 }, every: 3, req: { 'firework launching': true } },
                     { type: 'gather', what: { 'dark blue firework': 0.5 }, every: 6, req: { 'dark essenced fireworks': true } },
                     { type: 'gather', what: { 'dark orange firework': 0.5 }, every: 6, req: { 'dark essenced fireworks': true } },
                     { type: 'mult', value: 1.1, req: { 'ground tools': true } },
@@ -10369,7 +10371,7 @@ if (getObj("civ") != "1") {
             });
             new G.Unit({
                 name: 'firework launcher',
-                desc: 'Here, fireworks are launched right up into the sky. This generates quite a bit of [happiness] for every batch of fireworks launched up into the sky.',
+                desc: 'A staffed launch site for public fireworks displays. It consumes fireworks and converts each successful launch into [happiness] without putting performers directly in the blast zone.',
                 icon: [18, 0, 'seasonal'],
                 cost: { 'food': 10 },
                 use: { 'worker': 1, 'land': 1 },
@@ -10378,10 +10380,39 @@ if (getObj("civ") != "1") {
                     { type: 'convert', from: { 'blue firework': 1 }, into: { 'happiness': 75 }, every: 2, context: 'launching' },
                     { type: 'convert', from: { 'dark blue firework': 1 }, into: { 'happiness': 75 }, every: 2, context: 'launching' },
                     { type: 'convert', from: { 'dark orange firework': 1 }, into: { 'happiness': 75 }, every: 2, context: 'launching' },
+                    { type: 'convert', from: { 'firecracker': 1 }, into: { 'happiness': 50 }, every: 2, context: 'launching' },
                 ],
                 req: { 'culture of celebration': true, 'firework launching': true, 'tribalism': false },
                 category: 'seasonal',
                 //limitPer:{'land':40},
+            });
+            new G.Unit({
+                name: 'firework daredevil',
+                desc: '@consumes [firecracker]s to generate [happiness]@may become [wounded] while performing<>Some people see a firework and think, "beautiful." These people see one and ask how close they can stand. [firework daredevil,Firework daredevils] volunteer for reckless New Year stunts that make [firecracker]s more entertaining than a normal launch, at the cost of a small but very real accident risk.',
+                icon: [3, 0, 'seasonal'],
+                cost: {},
+                use: { 'worker': 1 },
+                upkeep: { 'firecracker': 0.25 },
+                effects: [
+                    { type: 'gather', what: { 'happiness': 24 }, context: 'reckless fireworks' },
+                    { type: 'function', func: unitGetsConverted({ 'wounded': 1 }, 0.001, 0.03, true, '[X] [people] wounded during a firework stunt.', 'firework daredevil was', 'firework daredevils were'), chance: 1 / 45 },
+                    {
+                        type: 'function', chance: 1 / 120, func: function () {
+                            G.Message({
+                                type: 'good',
+                                mergeId: 'firework-daredevil-show',
+                                text: choose([
+                                    'A firework daredevil lands a stunt to thunderous applause.',
+                                    'A reckless firework display goes exactly as planned, somehow.',
+                                    'The crowd cheers as a daredevil proves that standing closer is, occasionally, entertaining.'
+                                ]),
+                                icon: [3, 0, 'seasonal']
+                            });
+                        }
+                    },
+                ],
+                req: { 'culture of celebration': true, 'reckless pyrotechnics': true, 'tribalism': false },
+                category: 'seasonal',
             });
             new G.Unit({
                 name: 'heavy warehouse',
@@ -13861,10 +13892,17 @@ if (getObj("civ") != "1") {
             });
             new G.Tech({
                 name: 'firework launching', category: 'seasonal',
-                desc: '@unlocks the [firework launcher]. This allows the [artisan of new year] to craft [firecracker]s. //<small>Boom</small>',
+                desc: '@unlocks the [firework launcher] @[artisan of new year,Artisans of the New Year] can now craft [firecracker]s @unlocks further pyrotechnic experimentation //<small>Boom, responsibly. For now.</small>',
                 icon: [17, 0, 'seasonal'],
                 cost: { 'insight': 70 },
                 req: { 'culture of celebration': true, 'firework crafting': true, 'tribalism': false },
+            });
+            new G.Tech({
+                name: 'reckless pyrotechnics', category: 'seasonal',
+                desc: '@unlocks the [firework daredevil] @lets volunteers turn [firecracker]s into extra [happiness], with a small chance of becoming [wounded] //<small>There is always somebody willing to stand closer.</small>',
+                icon: [3, 0, 'seasonal'],
+                cost: { 'insight': 110 },
+                req: { 'culture of celebration': true, 'firework launching': true, 'tribalism': false },
             });
             new G.Tech({
                 name: 'dark essenced fireworks', category: 'seasonal',
